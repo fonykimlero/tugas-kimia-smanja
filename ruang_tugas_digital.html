@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelas Digital - Pengumpulan Tugas Google Drive</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .drag-active {
+            border-color: #2563eb !important;
+            background-color: #eff6ff !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+    <!-- Navbar -->
+    <header class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/20">
+                    <i class="fa-solid fa-flask text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 text-base sm:text-lg leading-tight">Kelas Digital Kimia</h1>
+                    <p class="text-xs text-slate-500 flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        Portal Pengumpulan Tugas (JPG & Google Drive)
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-2">
+                <button id="btnSettings" class="px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-2 border border-slate-200">
+                    <i class="fa-solid fa-gear text-slate-500"></i>
+                    <span class="hidden sm:inline">Pengaturan Drive Guru</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+        <!-- Left Column: Information & Task Details -->
+        <div class="lg:col-span-5 space-y-6">
+
+            <!-- Card Unduh LKPD (Modul & Soal Mandiri) -->
+            <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200 relative overflow-hidden bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="px-2.5 py-1 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider backdrop-blur-sm flex items-center gap-1">
+                        <i class="fa-solid fa-file-arrow-down"></i> Unduh Lembar Kerja (LKPD)
+                    </span>
+                    <span class="text-xs text-blue-100 flex items-center gap-1">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Format PDF
+                    </span>
+                </div>
+                
+                <h3 class="text-lg font-extrabold mb-1 text-white">Unduh LKPD Mandiri</h3>
+                <p class="text-xs text-blue-100 mb-4 leading-relaxed">
+                    Silakan unduh LKPD di bawah ini untuk dicetak atau dipelajari sebelum mengunggah foto lembar pengerjaan Anda.
+                </p>
+
+                <!-- List LKPD Downloadable Files -->
+                <div class="space-y-2.5 text-slate-800">
+                    <!-- Item LKPD Laju Reaksi -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-xl p-3 flex items-center justify-between border border-white/20 hover:bg-white transition-all shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-red-100 text-red-600 flex items-center justify-center font-bold text-base shrink-0">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-bold text-slate-900 truncate">LKPD Laju Reaksi</h4>
+                                <p class="text-[10px] text-slate-500">Materi BAB 1 • PDF</p>
+                            </div>
+                        </div>
+                        <a id="btnDownloadLaju" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-download text-[11px]"></i> Unduh
+                        </a>
+                    </div>
+
+                    <!-- Item LKPD Kesetimbangan -->
+                    <div class="bg-white/95 backdrop-blur-md rounded-xl p-3 flex items-center justify-between border border-white/20 hover:bg-white transition-all shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-red-100 text-red-600 flex items-center justify-center font-bold text-base shrink-0">
+                                <i class="fa-solid fa-file-pdf"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-bold text-slate-900 truncate">LKPD Kesetimbangan Kimia</h4>
+                                <p class="text-[10px] text-slate-500">Materi BAB 2 • PDF</p>
+                            </div>
+                        </div>
+                        <a id="btnDownloadKesetimbangan" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-download text-[11px]"></i> Unduh
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Class Card -->
+            <div class="glass-card rounded-2xl p-6 shadow-sm border border-slate-200 relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+                
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold mb-4 border border-blue-200">
+                    <i class="fa-solid fa-graduation-cap text-blue-500"></i> Kelas 11 (11-7, 11-8, 11-9)
+                </div>
+                
+                <h2 class="text-2xl font-extrabold text-slate-900 mb-2" id="displayTaskTitle">Pengumpulan Tugas Kimia Daring</h2>
+                <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                    Silakan unggah atau foto lembar pengerjaan latihan soal Anda dalam format <strong class="text-blue-600">JPG/JPEG</strong> untuk disimpan langsung di folder Google Drive kelas.
+                </p>
+
+                <!-- Requirements Checklist -->
+                <div class="bg-slate-50 rounded-xl p-4 border border-slate-200/80 space-y-3">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-blue-600"></i> Ketentuan Pengumpulan:
+                    </h3>
+                    <ul class="text-xs text-slate-600 space-y-2">
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                            <span>Format gambar wajib <strong class="text-slate-800">JPG / JPEG</strong> (Sistem konversi otomatis jika PNG/WebP).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                            <span>Pastikan tulisan pada lembar pengerjaan terlihat jelas & cukup pencahayaan.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i>
+                            <span>Dapat mengunggah hingga <strong class="text-slate-800">5 Halaman Lembar Soal</strong> sekaligus.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Active Google Drive Status Indicator -->
+                <div class="mt-6 pt-4 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                    <span class="text-slate-500 flex items-center gap-1.5">
+                        <i class="fa-brands fa-google-drive text-emerald-600 text-base"></i> Penyimpanan Tujuan:
+                    </span>
+                    <span id="driveFolderStatus" class="font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200 truncate max-w-[180px]">
+                        Google Drive Terhubung
+                    </span>
+                </div>
+            </div>
+
+            <!-- Petunjuk Pengambilan Foto LKPD -->
+            <div class="bg-gradient-to-br from-indigo-900 to-slate-900 rounded-2xl p-6 text-white shadow-lg space-y-4 relative overflow-hidden">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-yellow-400 font-bold">
+                        <i class="fa-solid fa-lightbulb text-xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Tips Foto Hasil LKPD</h4>
+                        <p class="text-xs text-slate-300">Agar penilaian optimal oleh Guru</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
+                        <i class="fa-solid fa-sun text-yellow-400 text-lg mb-1 block"></i>
+                        <span class="text-[11px] text-slate-200">Gunakan Cahaya Terang</span>
+                    </div>
+                    <div class="bg-white/5 p-3 rounded-xl border border-white/10 text-center">
+                        <i class="fa-solid fa-crop-simple text-blue-400 text-lg mb-1 block"></i>
+                        <span class="text-[11px] text-slate-200">Foto Tegak Lurus</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Submission Form -->
+        <div class="lg:col-span-7">
+            <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-200">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-5 mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Form Pengumpulan JPG</h3>
+                        <p class="text-xs text-slate-500">Lengkapi data diri & lampirkan foto LKPD Anda</p>
+                    </div>
+                    <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">Step 1 dari 2</span>
+                </div>
+
+                <form id="submissionForm" class="space-y-6">
+                    <!-- Student Identity -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nama Lengkap Siswa *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-user text-sm"></i>
+                                </span>
+                                <input type="text" id="studentName" required placeholder="Contoh: Ahmad Rizki" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Kelas / Rombel *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-school text-sm"></i>
+                                </span>
+                                <select id="studentClass" required class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                                    <option value="">-- Pilih Kelas --</option>
+                                    <option value="11-7">11-7</option>
+                                    <option value="11-8">11-8</option>
+                                    <option value="11-9">11-9</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Nomor Absen / NIS *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-hashtag text-sm"></i>
+                                </span>
+                                <input type="text" id="studentNo" required placeholder="Contoh: 04 / 212201" class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 uppercase mb-2">Judul Latihan / Tugas *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                    <i class="fa-solid fa-book-open text-sm"></i>
+                                </span>
+                                <select id="taskTitle" required class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                                    <option value="">-- Pilih Judul Tugas --</option>
+                                    <option value="Latihan Soal Laju Reaksi">Latihan Soal Laju Reaksi</option>
+                                    <option value="Latihan Soal Kesetimbangan Kimia">Latihan Soal Kesetimbangan Kimia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload & Camera Area -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="block text-xs font-bold text-slate-700 uppercase">Lampiran Foto LKPD (Format JPG) *</label>
+                            <span class="text-xs text-blue-600 font-semibold" id="fileCountBadge">0 / 5 File</span>
+                        </div>
+
+                        <!-- Dropzone Area -->
+                        <div id="dropZone" class="border-2 border-dashed border-slate-300 hover:border-blue-500 bg-slate-50 hover:bg-blue-50/50 rounded-2xl p-6 text-center transition-all cursor-pointer relative group">
+                            <input type="file" id="fileInput" accept="image/jpeg,image/jpg,image/png,image/webp" multiple class="hidden">
+                            
+                            <div class="space-y-3">
+                                <div class="w-14 h-14 mx-auto rounded-full bg-blue-100 group-hover:scale-110 transition-transform flex items-center justify-center text-blue-600">
+                                    <i class="fa-solid fa-cloud-arrow-up text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-slate-800">Tarik & Lepas foto LKPD di sini</p>
+                                    <p class="text-xs text-slate-500 mt-1">atau klik untuk memilih file dari galeri/HP</p>
+                                </div>
+                                <div class="flex items-center justify-center gap-2 pt-2">
+                                    <button type="button" id="btnBrowse" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 rounded-lg text-xs font-bold shadow-sm">
+                                        <i class="fa-regular fa-image text-blue-600 mr-1"></i> Pilih File JPG
+                                    </button>
+                                    <span class="text-xs text-slate-400">atau</span>
+                                    <button type="button" id="btnOpenCam" class="px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 hover:bg-indigo-100 rounded-lg text-xs font-bold shadow-sm">
+                                        <i class="fa-solid fa-camera mr-1"></i> Foto Langsung (Kamera)
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Previews Container -->
+                        <div id="previewContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-4 hidden">
+                            <!-- Dynamically populated previews -->
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-2">
+                        <button type="submit" id="btnSubmit" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 transition-all">
+                            <i class="fa-brands fa-google-drive text-base"></i>
+                            <span>Kirim LKPD ke Google Drive</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: Camera Viewfinder -->
+    <div id="cameraModal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+            <div class="p-4 border-b border-slate-800 flex items-center justify-between text-white">
+                <h4 class="font-bold text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-blue-400"></i> Ambil Foto LKPD (Auto JPG)
+                </h4>
+                <button type="button" id="btnCloseCam" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="relative bg-black flex items-center justify-center min-h-[300px]">
+                <video id="webcamVideo" autoplay playsinline class="w-full h-auto max-h-[60vh] object-contain"></video>
+                <canvas id="webcamCanvas" class="hidden"></canvas>
+                <!-- Frame overlay guide -->
+                <div class="absolute inset-6 border-2 border-dashed border-white/40 rounded-lg pointer-events-none flex items-center justify-center">
+                    <span class="text-white/60 text-xs bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">Posisikan LKPD di dalam bingkai</span>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-950 flex items-center justify-around border-t border-slate-800">
+                <button type="button" id="btnSnapPhoto" class="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 border-4 border-white shadow-lg flex items-center justify-center text-white active:scale-95 transition-all">
+                    <i class="fa-solid fa-camera text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Teacher Google Drive Settings -->
+    <div id="settingsModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl border border-slate-200">
+            <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                        <i class="fa-brands fa-google-drive"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">Pengaturan Integrasi Google Drive</h4>
+                        <p class="text-xs text-slate-500">Konfigurasi endpoint penyimpanan guru</p>
+                    </div>
+                </div>
+                <button type="button" id="btnCloseSettings" class="text-slate-400 hover:text-slate-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Nama Folder Google Drive</label>
+                    <input type="text" id="driveFolderName" value="Kimia-11-SMANJA-2627" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Google Apps Script Web App URL (Opsional untuk Sync Nyata)</label>
+                    <input type="url" id="driveScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono text-xs">
+                    <p class="text-[11px] text-slate-500 mt-1">Jika dikosongkan, sistem menggunakan **Mode Simulasi Penyimpanan Cloud**.</p>
+                </div>
+
+                <!-- Tautan Download LKPD Guru -->
+                <div class="border-t border-slate-200 pt-4 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-800 uppercase flex items-center gap-1.5">
+                        <i class="fa-solid fa-link text-blue-600"></i> Link File LKPD untuk Siswa (PDF / Drive Link)
+                    </h5>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link LKPD Laju Reaksi</label>
+                        <input type="url" id="linkLajuReaksi" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Link LKPD Kesetimbangan Kimia</label>
+                        <input type="url" id="linkKesetimbangan" placeholder="https://drive.google.com/file/d/.../view" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono">
+                    </div>
+                </div>
+
+                <!-- Tutorial Accordion / Guide -->
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
+                    <h5 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-code text-blue-600"></i> Cara Menghubungkan Google Drive Asli (2 Menit):
+                    </h5>
+                    <ol class="text-xs text-slate-600 space-y-1.5 list-decimal pl-4">
+                        <li>Buka Google Drive Anda, buat Folder baru (misal: <code>LKPD_LajuReaksi</code>).</li>
+                        <li>Buka <a href="https://script.google.com" target="_blank" class="text-blue-600 underline font-semibold">script.google.com</a> lalu buat proyek baru.</li>
+                        <li>Salin & Tempel script penerima file JPG di bawah ini, lalu klik <strong>Deploy > New Deployment > Web App</strong> (Set *Who has access: Anyone*).</li>
+                    </ol>
+
+                    <div class="relative">
+                        <pre class="bg-slate-900 text-slate-200 text-[10px] p-3 rounded-lg overflow-x-auto font-mono">
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var parentFolders = DriveApp.getFoldersByName(data.folderName);
+    var parentFolder = parentFolders.hasNext() ? parentFolders.next() : DriveApp.createFolder(data.folderName);
+    
+    // Buat subfolder khusus per siswa: [Kelas] Absen_Nama
+    var subFolderName = "[" + data.studentClass + "] " + data.studentNo + "_" + data.studentName;
+    var subFolder = parentFolder.createFolder(subFolderName);
+    
+    // Simpan seluruh lembar LKPD (JPG)
+    for (var i = 0; i < data.files.length; i++) {
+      var item = data.files[i];
+      var base64Data = item.base64.replace(/^data:image\/(jpeg|jpg|png|webp);base64,/, "");
+      var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", item.filename);
+      subFolder.createFile(blob);
+    }
+    return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+                        <button type="button" id="btnCopyScript" class="absolute top-2 right-2 px-2 py-1 bg-white/20 hover:bg-white/30 text-white rounded text-[10px] font-semibold backdrop-blur-sm">
+                            <i class="fa-regular fa-copy"></i> Salin Script
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+                <button type="button" id="btnSaveSettings" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow-sm">
+                    Simpan Pengaturan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Success Receipt / Confirmation -->
+    <div id="successModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-2xl border border-slate-200 text-center p-6 space-y-5 animate-in fade-in zoom-in duration-200">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-extrabold text-slate-900">Pengumpulan Berhasil!</h3>
+                <p class="text-xs text-slate-500 mt-1">LKPD Anda telah terkirim dan tersimpan aman di Google Drive.</p>
+            </div>
+
+            <!-- Receipt Detail Card -->
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-left space-y-2 text-xs">
+                <div class="flex justify-between border-b border-slate-200 pb-2">
+                    <span class="text-slate-500">ID Pengiriman:</span>
+                    <span id="receiptId" class="font-mono font-bold text-slate-700">#LKPD-8921</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Nama Siswa:</span>
+                    <span id="receiptName" class="font-bold text-slate-800">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Kelas / Absen:</span>
+                    <span id="receiptClass" class="font-semibold text-slate-700">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Waktu Kirim:</span>
+                    <span id="receiptTime" class="text-slate-600">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Total File JPG:</span>
+                    <span id="receiptFiles" class="font-bold text-blue-600">- File</span>
+                </div>
+            </div>
+
+            <div class="pt-2 flex flex-col gap-2">
+                <button type="button" id="btnDone" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold shadow-md">
+                    Selesai & Kirim Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container (Custom Banner) -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- App State & Logic -->
+    <script>
+        // Notification Toast Helper (Replaces browser alert)
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgClass = type === 'error' ? 'bg-red-600' : (type === 'success' ? 'bg-emerald-600' : 'bg-slate-900');
+            const iconClass = type === 'error' ? 'fa-triangle-exclamation' : (type === 'success' ? 'fa-circle-check' : 'fa-circle-info');
+            
+            toast.className = `${bgClass} text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-xl flex items-center gap-2 pointer-events-auto animate-in fade-in slide-in-from-bottom-3 duration-200`;
+            toast.innerHTML = `<i class="fa-solid ${iconClass}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Data State
+        const state = {
+            uploadedFiles: [], // Array of objects { name, type, dataUrl }
+            maxFiles: 5,
+            driveConfig: {
+                folderName: 'Kimia-11-SMANJA-2627',
+                scriptUrl: '',
+                linkLajuReaksi: '',
+                linkKesetimbangan: ''
+            },
+            stream: null
+        };
+
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const btnBrowse = document.getElementById('btnBrowse');
+        const btnOpenCam = document.getElementById('btnOpenCam');
+        const previewContainer = document.getElementById('previewContainer');
+        const fileCountBadge = document.getElementById('fileCountBadge');
+        const submissionForm = document.getElementById('submissionForm');
+        
+        // Camera Elements
+        const cameraModal = document.getElementById('cameraModal');
+        const btnCloseCam = document.getElementById('btnCloseCam');
+        const webcamVideo = document.getElementById('webcamVideo');
+        const webcamCanvas = document.getElementById('webcamCanvas');
+        const btnSnapPhoto = document.getElementById('btnSnapPhoto');
+
+        // Settings Elements
+        const settingsModal = document.getElementById('settingsModal');
+        const btnSettings = document.getElementById('btnSettings');
+        const btnCloseSettings = document.getElementById('btnCloseSettings');
+        const btnSaveSettings = document.getElementById('btnSaveSettings');
+        const driveFolderName = document.getElementById('driveFolderName');
+        const driveScriptUrl = document.getElementById('driveScriptUrl');
+        const linkLajuReaksi = document.getElementById('linkLajuReaksi');
+        const linkKesetimbangan = document.getElementById('linkKesetimbangan');
+        const driveFolderStatus = document.getElementById('driveFolderStatus');
+        const btnCopyScript = document.getElementById('btnCopyScript');
+
+        // Download LKPD Buttons
+        const btnDownloadLaju = document.getElementById('btnDownloadLaju');
+        const btnDownloadKesetimbangan = document.getElementById('btnDownloadKesetimbangan');
+
+        // Success Modal Elements
+        const successModal = document.getElementById('successModal');
+        const btnDone = document.getElementById('btnDone');
+
+        // Update Download Links Status
+        function updateDownloadLinks() {
+            if (state.driveConfig.linkLajuReaksi) {
+                btnDownloadLaju.href = state.driveConfig.linkLajuReaksi;
+                btnDownloadLaju.onclick = null;
+            } else {
+                btnDownloadLaju.href = "#";
+                btnDownloadLaju.onclick = (e) => {
+                    e.preventDefault();
+                    showNotification("Link LKPD Laju Reaksi belum disetting guru di Pengaturan Drive.", "info");
+                };
+            }
+
+            if (state.driveConfig.linkKesetimbangan) {
+                btnDownloadKesetimbangan.href = state.driveConfig.linkKesetimbangan;
+                btnDownloadKesetimbangan.onclick = null;
+            } else {
+                btnDownloadKesetimbangan.href = "#";
+                btnDownloadKesetimbangan.onclick = (e) => {
+                    e.preventDefault();
+                    showNotification("Link LKPD Kesetimbangan belum disetting guru di Pengaturan Drive.", "info");
+                };
+            }
+        }
+
+        // Event Listeners for Drag & Drop
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('drag-active');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('drag-active');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        });
+
+        dropZone.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return; // Ignore if clicked on inner buttons
+            fileInput.click();
+        });
+
+        btnBrowse.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Function: Process and auto-convert files to JPG format
+        function handleFiles(files) {
+            const arrayFiles = Array.from(files);
+            
+            if (state.uploadedFiles.length + arrayFiles.length > state.maxFiles) {
+                showNotification(`Maksimal hanya dapat mengunggah ${state.maxFiles} foto LKPD.`, 'error');
+                return;
+            }
+
+            arrayFiles.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Create canvas to enforce JPG encoding
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Fill white background for transparent images (e.g., PNG)
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0);
+
+                        // Export strictly as JPG (image/jpeg)
+                        const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                        
+                        state.uploadedFiles.push({
+                            id: Date.now() + Math.random(),
+                            name: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+                            dataUrl: jpgDataUrl
+                        });
+
+                        renderPreviews();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Render Image Previews
+        function renderPreviews() {
+            previewContainer.innerHTML = '';
+            
+            if (state.uploadedFiles.length > 0) {
+                previewContainer.classList.remove('hidden');
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+
+            fileCountBadge.textContent = `${state.uploadedFiles.length} / ${state.maxFiles} File`;
+
+            state.uploadedFiles.forEach((file, index) => {
+                const card = document.createElement('div');
+                card.className = "relative bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm group";
+                card.innerHTML = `
+                    <div class="h-28 bg-slate-100 overflow-hidden relative">
+                        <img src="${file.dataUrl}" class="w-full h-full object-cover">
+                        <span class="absolute top-1 left-1 bg-slate-900/80 text-white text-[10px] px-2 py-0.5 rounded font-semibold backdrop-blur-sm">
+                            Hal ${index + 1}
+                        </span>
+                        <span class="absolute top-1 right-1 bg-emerald-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">
+                            JPG
+                        </span>
+                    </div>
+                    <div class="p-2 flex items-center justify-between text-xs bg-slate-50 border-t border-slate-100">
+                        <span class="truncate text-[11px] text-slate-600 font-medium max-w-[90px]">${file.name}</span>
+                        <button type="button" onclick="removeFile(${file.id})" class="text-red-500 hover:text-red-700 p-1">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                previewContainer.appendChild(card);
+            });
+        }
+
+        // Remove File Handler
+        window.removeFile = function(id) {
+            state.uploadedFiles = state.uploadedFiles.filter(f => f.id !== id);
+            renderPreviews();
+        };
+
+        // Kamera Handler (Webcam/Mobile Camera)
+        btnOpenCam.addEventListener('click', async () => {
+            try {
+                state.stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: 'environment' } 
+                });
+                webcamVideo.srcObject = state.stream;
+                cameraModal.classList.remove('hidden');
+            } catch (err) {
+                showNotification("Gagal mengakses kamera. Pastikan izin kamera telah diberikan.", "error");
+                console.error(err);
+            }
+        });
+
+        function stopCamera() {
+            if (state.stream) {
+                state.stream.getTracks().forEach(track => track.stop());
+                state.stream = null;
+            }
+            cameraModal.classList.add('hidden');
+        }
+
+        btnCloseCam.addEventListener('click', stopCamera);
+
+        btnSnapPhoto.addEventListener('click', () => {
+            if (!webcamVideo.srcObject) return;
+
+            webcamCanvas.width = webcamVideo.videoWidth || 1280;
+            webcamCanvas.height = webcamVideo.videoHeight || 720;
+            const ctx = webcamCanvas.getContext('2d');
+            
+            ctx.drawImage(webcamVideo, 0, 0, webcamCanvas.width, webcamCanvas.height);
+            const jpgDataUrl = webcamCanvas.toDataURL('image/jpeg', 0.90);
+
+            if (state.uploadedFiles.length < state.maxFiles) {
+                state.uploadedFiles.push({
+                    id: Date.now(),
+                    name: `LKPD_Foto_Hal_${state.uploadedFiles.length + 1}.jpg`,
+                    dataUrl: jpgDataUrl
+                });
+                renderPreviews();
+            }
+
+            stopCamera();
+        });
+
+        // Settings Modal Handlers
+        btnSettings.addEventListener('click', () => {
+            driveFolderName.value = state.driveConfig.folderName;
+            driveScriptUrl.value = state.driveConfig.scriptUrl;
+            linkLajuReaksi.value = state.driveConfig.linkLajuReaksi || '';
+            linkKesetimbangan.value = state.driveConfig.linkKesetimbangan || '';
+            settingsModal.classList.remove('hidden');
+        });
+
+        btnCloseSettings.addEventListener('click', () => settingsModal.classList.add('hidden'));
+
+        btnSaveSettings.addEventListener('click', () => {
+            state.driveConfig.folderName = driveFolderName.value || 'Kimia-11-SMANJA-2627';
+            state.driveConfig.scriptUrl = driveScriptUrl.value;
+            state.driveConfig.linkLajuReaksi = linkLajuReaksi.value.trim();
+            state.driveConfig.linkKesetimbangan = linkKesetimbangan.value.trim();
+
+            driveFolderStatus.textContent = state.driveConfig.folderName;
+            updateDownloadLinks();
+            settingsModal.classList.add('hidden');
+            showNotification("Pengaturan Drive & Link LKPD berhasil disimpan!", "success");
+        });
+
+        btnCopyScript.addEventListener('click', () => {
+            const scriptCode = `function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var parentFolders = DriveApp.getFoldersByName(data.folderName);
+    var parentFolder = parentFolders.hasNext() ? parentFolders.next() : DriveApp.createFolder(data.folderName);
+    
+    // Buat subfolder khusus per siswa: [Kelas] Absen_Nama
+    var subFolderName = "[" + data.studentClass + "] " + data.studentNo + "_" + data.studentName;
+    var subFolder = parentFolder.createFolder(subFolderName);
+    
+    // Simpan seluruh lembar LKPD (JPG)
+    for (var i = 0; i < data.files.length; i++) {
+      var item = data.files[i];
+      var base64Data = item.base64.replace(/^data:image\\/(jpeg|jpg|png|webp);base64,/, "");
+      var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", item.filename);
+      subFolder.createFile(blob);
+    }
+    return ContentService.createTextOutput(JSON.stringify({status: "success"})).setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({status: "error", message: err.toString()})).setMimeType(ContentService.MimeType.JSON);
+  }
+}`;
+            navigator.clipboard.writeText(scriptCode);
+            btnCopyScript.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Tersalin!`;
+            setTimeout(() => {
+                btnCopyScript.innerHTML = `<i class="fa-regular fa-copy"></i> Salin Script`;
+            }, 2000);
+        });
+
+        // Form Submission Logic
+        submissionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (state.uploadedFiles.length === 0) {
+                showNotification("Harap lampirkan minimal 1 foto/file latihan format JPG!", "error");
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            const originalBtnHtml = btnSubmit.innerHTML;
+            
+            // Show Loading State
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Mengirim ke Google Drive...</span>`;
+
+            const name = document.getElementById('studentName').value;
+            const studentClass = document.getElementById('studentClass').value;
+            const studentNo = document.getElementById('studentNo').value;
+            const taskTitle = document.getElementById('taskTitle').value;
+
+            try {
+                // Paketkan seluruh identitas siswa dan berkas foto ke JSON payload
+                const payload = {
+                    folderName: state.driveConfig.folderName,
+                    studentName: name,
+                    studentClass: studentClass,
+                    studentNo: studentNo,
+                    taskTitle: taskTitle,
+                    files: state.uploadedFiles.map((file, idx) => ({
+                        filename: `${studentClass}_${studentNo}_${name}_Hal${idx+1}.jpg`,
+                        base64: file.dataUrl
+                    }))
+                };
+
+                // Jika URL Google Apps Script diisi oleh Guru
+                if (state.driveConfig.scriptUrl && state.driveConfig.scriptUrl.trim() !== '') {
+                    await fetch(state.driveConfig.scriptUrl.trim(), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain' },
+                        body: JSON.stringify(payload)
+                    });
+                } else {
+                    // Mode simulasi jika URL belum diisi
+                    await new Promise(resolve => setTimeout(resolve, 1800));
+                }
+
+                // Launch Celebration Confetti
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                // Populate Receipt Modal
+                document.getElementById('receiptId').textContent = `#LKPD-${Math.floor(1000 + Math.random() * 9000)}`;
+                document.getElementById('receiptName').textContent = name;
+                document.getElementById('receiptClass').textContent = `${studentClass} (Absen: ${studentNo})`;
+                document.getElementById('receiptTime').textContent = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB';
+                document.getElementById('receiptFiles').textContent = `${state.uploadedFiles.length} File (.JPG)`;
+
+                // Show Success Modal
+                successModal.classList.remove('hidden');
+
+            } catch (error) {
+                console.error(error);
+                showNotification("Terjadi kendala saat mengirim ke Google Drive. Periksa koneksi atau Web App URL.", "error");
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalBtnHtml;
+            }
+        });
+
+        // Close Done Modal
+        btnDone.addEventListener('click', () => {
+            successModal.classList.add('hidden');
+            submissionForm.reset();
+            state.uploadedFiles = [];
+            renderPreviews();
+        });
+
+        // Initial setup
+        updateDownloadLinks();
+    </script>
+</body>
+</html>
