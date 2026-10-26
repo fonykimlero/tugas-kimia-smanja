@@ -517,6 +517,15 @@ function doPost(e) {
             stream: null
         };
 
+        // Load saved settings from LocalStorage if available
+        try {
+            const localSaved = localStorage.getItem('smanja_kimia_config');
+            if (localSaved) {
+                const parsed = JSON.parse(localSaved);
+                state.driveConfig = { ...state.driveConfig, ...parsed };
+            }
+        } catch(e) {}
+
         // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
@@ -595,22 +604,15 @@ function doPost(e) {
 
         dropZone.addEventListener('drop', (e) => {
             const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
-        });
-
-        dropZone.addEventListener('click', (e) => {
-            if (e.target.closest('button')) return; // Ignore if clicked on inner buttons
-            fileInput.click();
+            if (dt && dt.files.length > 0) {
+                handleFiles(dt.files);
+            }
         });
 
         btnBrowse.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        // Function: Process and auto-convert files to JPG format
+        // Function: Process and auto-convert files to JPG format with AUTO-COMPRESSION (Max 1280px)
         function handleFiles(files) {
             const arrayFiles = Array.from(files);
             
@@ -624,19 +626,34 @@ function doPost(e) {
                 reader.onload = (event) => {
                     const img = new Image();
                     img.onload = () => {
-                        // Create canvas to enforce JPG encoding
+                        // Hitung resolusi optimal (Max 1280px) agar pengiriman super cepat & ringan
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDimension = 1280;
+
+                        if (width > maxDimension || height > maxDimension) {
+                            if (width > height) {
+                                height = Math.round((height * maxDimension) / width);
+                                width = maxDimension;
+                            } else {
+                                width = Math.round((width * maxDimension) / height);
+                                height = maxDimension;
+                            }
+                        }
+
+                        // Create canvas to enforce JPG encoding & optimized size
                         const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
+                        canvas.width = width;
+                        canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         
                         // Fill white background for transparent images (e.g., PNG)
                         ctx.fillStyle = '#FFFFFF';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        ctx.drawImage(img, 0, 0);
+                        ctx.drawImage(img, 0, 0, width, height);
 
-                        // Export strictly as JPG (image/jpeg)
-                        const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                        // Export strictly as JPG (image/jpeg) dengan kompresi 0.80
+                        const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.80);
                         
                         state.uploadedFiles.push({
                             id: Date.now() + Math.random(),
@@ -764,6 +781,11 @@ function doPost(e) {
             state.driveConfig.linkLajuReaksi = linkLajuReaksi.value.trim();
             state.driveConfig.linkKesetimbangan = linkKesetimbangan.value.trim();
 
+            // Simpan ke LocalStorage agar konfigurasi tersimpan
+            try {
+                localStorage.setItem('smanja_kimia_config', JSON.stringify(state.driveConfig));
+            } catch(e) {}
+
             driveFolderStatus.textContent = state.driveConfig.folderName;
             updateDownloadLinks();
             settingsModal.classList.add('hidden');
@@ -771,17 +793,22 @@ function doPost(e) {
         });
 
         btnCopyScript.addEventListener('click', () => {
-            const scriptCode = `function doPost(e) {
+            const scriptCode = `function doGet(e) {
+  return ContentService.createTextOutput("Google Apps Script Server Kimia SMANJA Aktif!")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
-    var parentFolders = DriveApp.getFoldersByName(data.folderName);
-    var parentFolder = parentFolders.hasNext() ? parentFolders.next() : DriveApp.createFolder(data.folderName);
+    var targetFolderName = data.folderName || "Kimia-11-SMANJA-2627";
     
-    // Buat subfolder khusus per siswa: [Kelas] Absen_Nama
+    var parentFolders = DriveApp.getFoldersByName(targetFolderName);
+    var parentFolder = parentFolders.hasNext() ? parentFolders.next() : DriveApp.createFolder(targetFolderName);
+    
     var subFolderName = "[" + data.studentClass + "] " + data.studentNo + "_" + data.studentName;
     var subFolder = parentFolder.createFolder(subFolderName);
     
-    // Simpan seluruh lembar LKPD (JPG)
     for (var i = 0; i < data.files.length; i++) {
       var item = data.files[i];
       var base64Data = item.base64.replace(/^data:image\\/(jpeg|jpg|png|webp);base64,/, "");
@@ -824,7 +851,7 @@ function doPost(e) {
             try {
                 // Paketkan seluruh identitas siswa dan berkas foto ke JSON payload
                 const payload = {
-                    folderName: state.driveConfig.folderName,
+                    folderName: state.driveConfig.folderName || 'Kimia-11-SMANJA-2627',
                     studentName: name,
                     studentClass: studentClass,
                     studentNo: studentNo,
@@ -835,13 +862,25 @@ function doPost(e) {
                     }))
                 };
 
-                // Jika URL Google Apps Script diisi oleh Guru
-                if (state.driveConfig.scriptUrl && state.driveConfig.scriptUrl.trim() !== '') {
-                    await fetch(state.driveConfig.scriptUrl.trim(), {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain' },
-                        body: JSON.stringify(payload)
-                    });
+                const scriptTargetUrl = state.driveConfig.scriptUrl ? state.driveConfig.scriptUrl.trim() : 'https://script.google.com/macros/s/AKfycbybe09zmMYwpNqgbov7U2QObmaFJynxeCkN3o-P6vDPp9sAt177mN1LHipR9qQgvoht/exec';
+
+                if (scriptTargetUrl !== '') {
+                    // Gunakan pengiriman ganda anti-CORS untuk menjamin penerimaan file di Apps Script
+                    try {
+                        await fetch(scriptTargetUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(payload)
+                        });
+                    } catch (corsErr) {
+                        console.warn("Retrying with fallback no-cors mode...", corsErr);
+                        await fetch(scriptTargetUrl, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify(payload)
+                        });
+                    }
                 } else {
                     // Mode simulasi jika URL belum diisi
                     await new Promise(resolve => setTimeout(resolve, 1800));
