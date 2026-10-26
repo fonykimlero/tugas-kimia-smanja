@@ -92,7 +92,7 @@
                 
                 <h3 class="text-lg font-extrabold mb-1 text-white">Unduh LKPD Mandiri</h3>
                 <p class="text-xs text-blue-100 mb-4 leading-relaxed">
-                    Silakan unduh LKPD di bawah ini untuk dicetak atau dipelajari sebelum mengunggah foto lembar pengerjaan Anda.
+                    Silakan unduh File Soal di bawah ini untuk dicetak (tidak juga tidak apa-apa) sebelum mengunggah foto lembar pengerjaan Kamu.
                 </p>
 
                 <!-- List LKPD Downloadable Files -->
@@ -104,8 +104,8 @@
                                 <i class="fa-solid fa-file-pdf"></i>
                             </div>
                             <div class="min-w-0">
-                                <h4 class="text-xs font-bold text-slate-900 truncate">LKPD Laju Reaksi</h4>
-                                <p class="text-[10px] text-slate-500">Materi BAB 1 • PDF</p>
+                                <h4 class="text-xs font-bold text-slate-900 truncate">Level Up: Laju Reaksi</h4>
+                                <p class="text-[10px] text-slate-500">Materi Laju Reaksi • PDF</p>
                             </div>
                         </div>
                         <a id="btnDownloadLaju" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-sm">
@@ -120,8 +120,8 @@
                                 <i class="fa-solid fa-file-pdf"></i>
                             </div>
                             <div class="min-w-0">
-                                <h4 class="text-xs font-bold text-slate-900 truncate">LKPD Kesetimbangan Kimia</h4>
-                                <p class="text-[10px] text-slate-500">Materi BAB 2 • PDF</p>
+                                <h4 class="text-xs font-bold text-slate-900 truncate">LKPD Kesetimbangan Kimia (belum tersedia)</h4>
+                                <p class="text-[10px] text-slate-500">Materi Kesetimbangan Kimia • PDF</p>
                             </div>
                         </div>
                         <a id="btnDownloadKesetimbangan" href="#" target="_blank" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1.5 shadow-sm">
@@ -141,7 +141,7 @@
                 
                 <h2 class="text-2xl font-extrabold text-slate-900 mb-2" id="displayTaskTitle">Pengumpulan Tugas Kimia Daring</h2>
                 <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                    Silakan unggah atau foto lembar pengerjaan latihan soal Anda dalam format <strong class="text-blue-600">JPG/JPEG</strong> untuk disimpan langsung di folder Google Drive kelas.
+                    Kerjakan soal-soal tersebut sesuai dengan waktu yang tersedia. Jika waktu mapel Kimia sudah selesai, silakan unggah atau foto lembar pengerjaan latihan soal Kamu dalam format <strong class="text-blue-600">JPG/JPEG</strong> untuk disimpan langsung di folder Google Drive kelas.
                 </p>
 
                 <!-- Requirements Checklist -->
@@ -206,7 +206,7 @@
                 <div class="flex items-center justify-between border-b border-slate-200 pb-5 mb-6">
                     <div>
                         <h3 class="text-lg font-bold text-slate-900">Form Pengumpulan JPG</h3>
-                        <p class="text-xs text-slate-500">Lengkapi data diri & lampirkan foto LKPD Anda</p>
+                        <p class="text-xs text-slate-500">Lengkapi data diri & lampirkan foto LKPD Kamu</p>
                     </div>
                     <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md border border-slate-200">Step 1 dari 2</span>
                 </div>
@@ -393,7 +393,7 @@
                         <i class="fa-solid fa-code text-blue-600"></i> Cara Menghubungkan Google Drive Asli (2 Menit):
                     </h5>
                     <ol class="text-xs text-slate-600 space-y-1.5 list-decimal pl-4">
-                        <li>Buka Google Drive Anda, buat Folder baru (misal: <code>LKPD_LajuReaksi</code>).</li>
+                        <li>Buka Google Drive Kamu, buat Folder baru (misal: <code>LKPD_LajuReaksi</code>).</li>
                         <li>Buka <a href="https://script.google.com" target="_blank" class="text-blue-600 underline font-semibold">script.google.com</a> lalu buat proyek baru.</li>
                         <li>Salin & Tempel script penerima file JPG di bawah ini, lalu klik <strong>Deploy > New Deployment > Web App</strong> (Set *Who has access: Anyone*).</li>
                     </ol>
@@ -446,7 +446,7 @@ function doPost(e) {
 
             <div>
                 <h3 class="text-xl font-extrabold text-slate-900">Pengumpulan Berhasil!</h3>
-                <p class="text-xs text-slate-500 mt-1">LKPD Anda telah terkirim dan tersimpan aman di Google Drive.</p>
+                <p class="text-xs text-slate-500 mt-1">LKPD Kamu telah terkirim dan tersimpan aman di Google Drive.</p>
             </div>
 
             <!-- Receipt Detail Card -->
@@ -865,7 +865,7 @@ function doPost(e) {
                 const scriptTargetUrl = state.driveConfig.scriptUrl ? state.driveConfig.scriptUrl.trim() : 'https://script.google.com/macros/s/AKfycbybe09zmMYwpNqgbov7U2QObmaFJynxeCkN3o-P6vDPp9sAt177mN1LHipR9qQgvoht/exec';
 
                 if (scriptTargetUrl !== '') {
-                    // Gunakan pengiriman ganda anti-CORS untuk menjamin penerimaan file di Apps Script
+                    // Gunakan pengiriman gKamu anti-CORS untuk menjamin penerimaan file di Apps Script
                     try {
                         await fetch(scriptTargetUrl, {
                             method: 'POST',
