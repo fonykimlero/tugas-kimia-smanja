@@ -64,7 +64,8 @@
             </div>
             
             <div class="flex items-center space-x-2">
-                <button id="btnSettings" class="px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-2 border border-slate-200">
+                <!-- Button Hidden by default using class 'hidden' -->
+                <button id="btnSettings" class="hidden px-3 py-2 text-xs sm:text-sm font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-all flex items-center gap-2 border border-slate-200">
                     <i class="fa-solid fa-gear text-slate-500"></i>
                     <span class="hidden sm:inline">Pengaturan Drive Guru</span>
                 </button>
@@ -506,9 +507,10 @@ function doPost(e) {
         const state = {
             uploadedFiles: [], // Array of objects { name, type, dataUrl }
             maxFiles: 5,
+            teacherPin: '1234', // PIN default Guru untuk akses pengaturan
             driveConfig: {
                 folderName: 'Kimia-11-SMANJA-2627',
-                scriptUrl: '',
+                scriptUrl: 'https://script.google.com/macros/s/AKfycbybe09zmMYwpNqgbov7U2QObmaFJynxeCkN3o-P6vDPp9sAt177mN1LHipR9qQgvoht/exec',
                 linkLajuReaksi: '',
                 linkKesetimbangan: ''
             },
@@ -740,6 +742,13 @@ function doPost(e) {
 
         // Settings Modal Handlers
         btnSettings.addEventListener('click', () => {
+            // Verifikasi PIN Guru
+            const inputPin = prompt("Masukkan PIN Pengaturan Guru:");
+            if (inputPin !== state.teacherPin) {
+                showNotification("PIN Salah! Akses pengaturan ditolak.", "error");
+                return;
+            }
+
             driveFolderName.value = state.driveConfig.folderName;
             driveScriptUrl.value = state.driveConfig.scriptUrl;
             linkLajuReaksi.value = state.driveConfig.linkLajuReaksi || '';
@@ -874,6 +883,12 @@ function doPost(e) {
 
         // Initial setup
         updateDownloadLinks();
+
+        // Tampilkan tombol Pengaturan HANYA jika URL mengandung parameter ?guru=true atau ?admin=true
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('guru') === 'true' || urlParams.get('admin') === 'true') {
+            btnSettings.classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
